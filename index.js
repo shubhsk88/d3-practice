@@ -28,10 +28,7 @@ async function drawLineChart() {
     .attr('height', dms.height);
   const bound = wrapper
     .append('g')
-    .style(
-      'transform',
-      `translate(${dms.margin.left}px,${dms.margin.bottom}px)`
-    );
+    .style('transform', `translate(${dms.margin.left}px,${dms.margin.top}px)`);
   //Create scales for x axis and y-axis
 
   const yScale = d3
@@ -64,6 +61,16 @@ async function drawLineChart() {
     .attr('fill', 'none')
     .attr('stroke', 'cornflowerblue')
     .attr('stroke-width', 2);
+
+  //Draw peripherals
+
+  const yAxisGenerator = d3.axisLeft().scale(yScale);
+  const yAxis = bound.append('g').call(yAxisGenerator);
+  const xAxisGenerator = d3.axisBottom().scale(xScale);
+  const xAxis = bound
+    .append('g')
+    .style('transform', `translateY(${dms.boundedHeight}px)`)
+    .call(xAxisGenerator);
 }
 
 drawLineChart();
