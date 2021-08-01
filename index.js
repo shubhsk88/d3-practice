@@ -26,7 +26,44 @@ async function drawLineChart() {
     .append('svg')
     .attr('width', dms.width)
     .attr('height', dms.height);
-  console.log(wrapper);
+  const bound = wrapper
+    .append('g')
+    .style(
+      'transform',
+      `translate(${dms.margin.left}px,${dms.margin.bottom}px)`
+    );
+  //Create scales for x axis and y-axis
+
+  const yScale = d3
+    .scaleLinear()
+    .domain(d3.extent(data, yAccessor))
+    .range([dms.boundedHeight, 0]);
+
+  const freezingTemperaturePlacement = yScale(32);
+  const freezingTemperature = bound
+    .append('rect')
+    .attr('x', 0)
+    .attr('width', dms.boundedWidth)
+    .attr('y', freezingTemperaturePlacement)
+    .attr('height', dms.boundedHeight - freezingTemperaturePlacement)
+    .attr('fill', '#e0f3f3');
+
+  const xScale = d3
+    .scaleTime()
+    .domain(d3.extent(data, xAccessor))
+    .range([0, dms.boundedWidth]);
+
+  //Draw data
+  const lineGenerator = d3
+    .line()
+    .x((d) => xScale(xAccessor(d)))
+    .y((d) => yScale(yAccessor(d)));
+  const line = bound
+    .append('path')
+    .attr('d', lineGenerator(data))
+    .attr('fill', 'none')
+    .attr('stroke', 'cornflowerblue')
+    .attr('stroke-width', 2);
 }
 
 drawLineChart();
