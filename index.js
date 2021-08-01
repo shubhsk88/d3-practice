@@ -20,7 +20,13 @@ async function drawLineChart() {
   };
   dms.boundedWidth = dms.width - dms.margin.left - dms.margin.right;
   dms.boundedHeight = dms.height - dms.margin.top - dms.margin.bottom;
-  console.log(dms);
+  // Add the wrapper from dom and add an svg and add the attr of dimension
+  const wrapper = d3
+    .select('#wrapper')
+    .append('svg')
+    .attr('width', dms.width)
+    .attr('height', dms.height);
+  console.log(wrapper);
 }
 
 drawLineChart();
