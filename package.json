@@ -8,5 +8,8 @@
   },
   "devDependencies": {
     "parcel": "^2.0.0-beta.3.1"
+  },
+  "dependencies": {
+    "d3": "^7.0.0"
   }
 }
