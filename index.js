@@ -3,6 +3,7 @@ import data from './my_weather_data.json';
 
 async function drawScatterPlot() {
   //define accessor
+  //define accessor
   const xAccessor = (d) => d.dewPoint;
   const yAccessor = (d) => d.humidity;
 
@@ -12,10 +13,10 @@ async function drawScatterPlot() {
     width,
     height: width,
     margin: {
-      left: 40,
+      left: 50,
       right: 10,
-      top: 10,
-      bottom: 40,
+      top: 40,
+      bottom: 10,
     },
   };
   dms.boundedWidth = dms.width - dms.margin.left - dms.margin.right;
@@ -26,8 +27,8 @@ async function drawScatterPlot() {
     .select('#wrapper')
     .append('svg')
     .attr('width', dms.width)
-    .attr('height', dms.height)
-    .style('border', '1px solid green');
+    .attr('height', dms.height);
+
   const bounds = wrapper
     .append('g')
     .style(
@@ -64,8 +65,35 @@ async function drawScatterPlot() {
     .join('circle')
     .attr('r', 5)
     .attr('cx', (d) => xScale(xAccessor(d)))
-    .attr('cy', (d) => yScale(yAccessor(d)));
-  console.log(dots);
+    .attr('cy', (d) => yScale(yAccessor(d)))
+    .attr('fill', 'cornflowerblue');
+
+  const xAxisGenerator = d3.axisBottom().scale(xScale);
+
+  const xAxis = bounds
+    .append('g')
+    .call(xAxisGenerator)
+    .style('transform', `translateY(${dms.boundedHeight}px)`);
+
+  xAxis
+    .append('text')
+    .html('Dew point(&deg;F)')
+    .attr('fill', 'black')
+    .style('font-size', '1.4em')
+    .attr('x', dms.boundedWidth / 2)
+    .attr('y', dms.margin.bottom + 18);
+  const yAxisGenerator = d3.axisLeft().scale(yScale).ticks(4);
+
+  const yAxis = bounds.append('g').call(yAxisGenerator);
+  yAxis
+    .append('text')
+    .html('Relative Humidity')
+
+    .attr('fill', 'black')
+    .attr('x', -dms.boundedHeight / 2)
+    .style('text-anchor', 'middle')
+    .style('transform', 'rotate(-90deg)')
+    .attr('y', -dms.margin.right - 15);
 }
 
 drawScatterPlot();
