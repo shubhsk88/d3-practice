@@ -2,11 +2,15 @@ import * as d3 from 'd3';
 import data from './my_weather_data.json';
 
 async function drawScatterPlot() {
-  //define accessor
+  const data = await d3.json('./my_weather_data.json');
+  console.log(data[0]);
+
   //define accessor
   const xAccessor = (d) => d.dewPoint;
   const yAccessor = (d) => d.humidity;
 
+  const colorAccessor = (d) => d.cloudCover;
+  console.log(colorAccessor(data[0]));
   //decide the dimension
   const width = d3.min([window.innerHeight * 0.9, window.innerWidth * 0.9]);
   const dms = {
@@ -47,6 +51,11 @@ async function drawScatterPlot() {
     .domain(d3.extent(data, yAccessor))
     .range([dms.boundedHeight, 0]);
 
+  const colorScale = d3
+    .scaleLinear()
+    .domain(d3.extent(data, colorAccessor))
+    .range(['skyblue', 'darkslategrey']);
+
   // Draw the graph
 
   // data.forEach((dots) => {
@@ -66,7 +75,7 @@ async function drawScatterPlot() {
     .attr('r', 5)
     .attr('cx', (d) => xScale(xAccessor(d)))
     .attr('cy', (d) => yScale(yAccessor(d)))
-    .attr('fill', 'cornflowerblue');
+    .attr('fill', (d) => colorScale(colorAccessor(d)));
 
   const xAxisGenerator = d3.axisBottom().scale(xScale);
 
